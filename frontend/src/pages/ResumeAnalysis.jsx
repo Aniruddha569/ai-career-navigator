@@ -28,6 +28,8 @@ export default function ResumeAnalysis() {
     } finally { setAnalyzing(false); }
   };
 
+  const get = (obj, snake, camel) => obj?.[snake] ?? obj?.[camel];
+
   return (
     <div className="page">
       <div className="page-header">
@@ -54,16 +56,16 @@ export default function ResumeAnalysis() {
       )}
 
       {error && <div className="alert alert-error" style={{ marginTop: '14px' }}>{error}</div>}
-      {analyzing && <Loader text="Gemini is reviewing your resume..." />}
+      {analyzing && <Loader text="AI is reviewing your resume..." />}
 
       {analysis && !analyzing && (
         <div style={{ marginTop: '32px' }}>
           <h2 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '16px' }}>Your results</h2>
 
           <div className="grid-3" style={{ marginBottom: '20px' }}>
-            <ScoreCard label="Resume score" score={analysis.resume_score} color="#5b4fff" bg="#ede9ff" />
-            <ScoreCard label="ATS score" score={analysis.ats_score} color="#16a34a" bg="#dcfce7" />
-            <ScoreCard label="SAP readiness" score={analysis.sap_readiness_score || 0} color="#d97706" bg="#fef3c7" />
+            <ScoreCard label="Resume score" score={get(analysis, 'resume_score', 'resumeScore')} color="#5b4fff" bg="#ede9ff" />
+            <ScoreCard label="ATS score" score={get(analysis, 'ats_score', 'atsScore')} color="#16a34a" bg="#dcfce7" />
+            <ScoreCard label="SAP readiness" score={get(analysis, 'sap_readiness_score', 'sapReadinessScore') ?? 0} color="#d97706" bg="#fef3c7" />
           </div>
 
           <div className="grid-2" style={{ marginBottom: '16px' }}>
@@ -87,11 +89,11 @@ export default function ResumeAnalysis() {
             </div>
           </div>
 
-          {parse(analysis.missing_skills).length > 0 && (
+          {parse(get(analysis, 'missing_skills', 'missingSkills')).length > 0 && (
             <div className="card" style={{ marginBottom: '16px' }}>
               <p style={{ fontWeight: 600, fontSize: '0.875rem', marginBottom: '12px' }}>Missing skills</p>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                {parse(analysis.missing_skills).map((s, i) => (
+                {parse(get(analysis, 'missing_skills', 'missingSkills')).map((s, i) => (
                   <span key={i} className="chip chip-red">{s}</span>
                 ))}
               </div>
@@ -100,7 +102,7 @@ export default function ResumeAnalysis() {
 
           <div className="card">
             <p style={{ fontWeight: 600, fontSize: '0.875rem', marginBottom: '12px' }}>Suggestions</p>
-            {parse(analysis.improvement_suggestions).map((s, i) => (
+            {parse(get(analysis, 'improvement_suggestions', 'improvementSuggestions')).map((s, i) => (
               <div key={i} style={{ display: 'flex', gap: '10px', padding: '10px 0',
                 borderBottom: '1px solid var(--border)', fontSize: '0.85rem' }}>
                 <span style={{ color: 'var(--accent)', fontWeight: 600, minWidth: '18px' }}>{i + 1}</span>

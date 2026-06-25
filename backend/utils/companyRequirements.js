@@ -1,9 +1,3 @@
-// backend/utils/companyRequirements.js
-// Static reference data describing what each target company typically
-// looks for in interns/new grads. This gets injected into the Gemini
-// prompt for skill-gap analysis so the AI has concrete criteria to
-// compare the resume against, instead of guessing.
-
 const companyRequirements = {
   'SAP Labs': {
     coreSkills: ['Java', 'JavaScript', 'SQL', 'Data Structures & Algorithms', 'OOP Concepts', 'ABAP (preferred)'],
@@ -32,15 +26,17 @@ const companyRequirements = {
 };
 
 function getCompanyRequirements(companyName) {
-  return companyRequirements[companyName] || null;
+  // Return known requirements or generate a generic one for any company
+  return companyRequirements[companyName] || {
+    coreSkills: ['Data Structures & Algorithms', 'Programming fundamentals', 'SQL', 'OOP Concepts'],
+    frameworks: ['REST APIs', 'Version Control (Git)', 'Problem Solving'],
+    softSkills: ['Communication', 'Team Collaboration', 'Adaptability'],
+    focusAreas: ['Technical fundamentals', 'Project experience', 'Industry-relevant skills'],
+  };
 }
 
 function getSupportedCompanies() {
   return Object.keys(companyRequirements);
 }
 
-module.exports = {
-  companyRequirements,
-  getCompanyRequirements,
-  getSupportedCompanies,
-};
+module.exports = { companyRequirements, getCompanyRequirements, getSupportedCompanies };

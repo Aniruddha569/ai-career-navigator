@@ -12,10 +12,10 @@ export default function SkillGap() {
   const [error, setError] = useState('');
 
   const handleAnalyze = async () => {
-    if (!company) return;
+    if (!company.trim()) return;
     setError(''); setLoading(true); setResult(null);
     try {
-      const res = await api.post('/skill-gap/analyze', { targetCompany: company });
+      const res = await api.post('/skill-gap/analyze', { targetCompany: company.trim() });
       setResult(res.data.result);
     } catch (err) {
       setError(err.response?.data?.message || 'Make sure you have an uploaded resume.');
@@ -31,7 +31,8 @@ export default function SkillGap() {
 
       <div className="card" style={{ marginBottom: '20px' }}>
         <p style={{ fontWeight: 500, fontSize: '0.875rem', marginBottom: '12px' }}>Target company</p>
-        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '16px' }}>
+
+        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '12px' }}>
           {COMPANIES.map(c => (
             <button key={c} onClick={() => setCompany(c)} style={{
               padding: '8px 18px', borderRadius: '8px', fontSize: '0.875rem', fontWeight: 500,
@@ -42,9 +43,23 @@ export default function SkillGap() {
             }}>{c}</button>
           ))}
         </div>
+
+        <input
+          type="text"
+          placeholder="Or type any company name (e.g. Infosys, TCS, Wipro...)"
+          value={company}
+          onChange={e => setCompany(e.target.value)}
+          onKeyDown={e => e.key === 'Enter' && handleAnalyze()}
+          style={{
+            width: '100%', padding: '10px 14px', borderRadius: '8px', fontSize: '0.875rem',
+            border: '1.5px solid var(--border)', outline: 'none', marginBottom: '16px',
+            boxSizing: 'border-box', color: 'var(--text-1)', background: 'var(--bg-input)'
+          }}
+        />
+
         <button className="btn btn-primary" onClick={handleAnalyze}
-          disabled={!company || loading} style={{ padding: '10px 24px' }}>
-          {loading ? 'Analyzing...' : `Analyze for ${company || '...'}`}
+          disabled={!company.trim() || loading} style={{ padding: '10px 24px' }}>
+          {loading ? 'Analyzing...' : `Analyze for ${company.trim() || '...'}`}
         </button>
       </div>
 

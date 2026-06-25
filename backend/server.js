@@ -1,7 +1,8 @@
 // backend/server.js
 // Entry point. Wires together middleware, routes, and error handling.
 
-require('dotenv').config();
+require('dotenv').config();  // ← MUST be first
+console.log("GEMINI KEY:", process.env.GEMINI_API_KEY);  // now it will print the key
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
